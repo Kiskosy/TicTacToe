@@ -70,6 +70,10 @@ public class LoginActivity extends Activity implements RecycleAdapter.ItemClickL
     }
 
     private void callAndParseResponse(){
+        UserModel header = new UserModel("Pick one user");
+        userModels.add(header);
+        userModelNames.add(header.getUsername());
+
         try {
             String response = new LoginService().execute("test").get();
 
