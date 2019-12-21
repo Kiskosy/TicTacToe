@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16sp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:cardElevation="2dp">
     <TextView
         android:id="@+id/recycler_view_header_text_view"
         android:layout_width="wrap_content"
@@ -12,4 +14,4 @@
         android:textStyle="bold"
         android:textColor="@color/Black"
         android:text="asd"/>
-</LinearLayout>
+</androidx.cardview.widget.CardView>

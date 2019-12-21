@@ -3,35 +3,27 @@ package university.tictactoe.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.json.JSONObject;
-import org.json.JSONArray;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import university.tictactoe.R;
 import university.tictactoe.database.DatabaseClient;
-import university.tictactoe.databinding.ActivityMainBinding;
 import university.tictactoe.listeners.RecycleAdapter;
 import university.tictactoe.models.UserModel;
 import university.tictactoe.services.LoginService;
 
-public class LoginActivity extends Activity implements RecycleAdapter.ItemClickListener {
+public class LoginActivity extends Activity {
 
     private RecyclerView recyclerView;
     private RecycleAdapter mAdapter;
@@ -39,6 +31,7 @@ public class LoginActivity extends Activity implements RecycleAdapter.ItemClickL
 
     private List<UserModel> userModels = new ArrayList<>();
     private List<String> userModelNames = new ArrayList<>();
+
 
     public static Context context;
 
@@ -51,23 +44,50 @@ public class LoginActivity extends Activity implements RecycleAdapter.ItemClickL
         callAndParseResponse();
         SaveUsers saveUsers = new SaveUsers();
         saveUsers.execute();
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
+        recyclerView.addOnItemTouchListener(
+                new RecycleAdapter(context, recyclerView ,new RecycleAdapter.ClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        if(position != 0) {
+                            Intent intent = new Intent(view.getContext(), MainActivity.class);
+                            intent.putExtra("username", userModelNames.get(position));
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        if(position != 0) {
+                            Intent intent = new Intent(view.getContext(), MainActivity.class);
+                            intent.putExtra("username", userModelNames.get(position));
+                            startActivity(intent);
+                        }
+                    }
+                })
+        );
+
+        //mAdapter = new RecycleAdapter(userModelNames);
+        mAdapter = new RecycleAdapter(userModelNames);
+
+        //mAdapter.setClickListener(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new RecycleAdapter(this, userModelNames);
-        mAdapter.setClickListener(this);
         recyclerView.setAdapter(mAdapter);
 
+        UserModel newlyadded1 = new UserModel("newlyadded1");
+        UserModel newlyadded2 = new UserModel("newlyadded2");
+        UserModel newlyadded3 = new UserModel("newlyadded3");
+        //userModels.add(newlyadded1);
+        //userModels.add(newlyadded2);
+        //userModels.add(newlyadded3);
+
+        userModelNames.add(newlyadded1.getUsername());
+        userModelNames.add(newlyadded2.getUsername());
+        userModelNames.add(newlyadded3.getUsername());
+
+        mAdapter.updateList(userModelNames);
     }
 
-    @Override
-    public void onItemClick(View view, int position){
-
-        Intent intent = new Intent(view.getContext(), MainActivity.class);
-
-        intent.putExtra("username", mAdapter.getItem(position));
-        startActivity(intent);
-    }
 
     private void callAndParseResponse(){
         UserModel header = new UserModel("Pick one user");
@@ -135,5 +155,8 @@ public class LoginActivity extends Activity implements RecycleAdapter.ItemClickL
         }
 
     }
+
+
 }
+
 
